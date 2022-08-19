@@ -3,6 +3,8 @@
 }
 
 .listaAlunos {
+    text-align: right;
+    width:97%;
     margin-left: 20px;
     font-family:
     'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande'
