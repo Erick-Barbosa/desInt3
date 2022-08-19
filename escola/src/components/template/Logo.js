@@ -1,3 +1,4 @@
+import React from 'react';
 import './Logo.css';
 import logo from '../../assets/imagens/logo_escola.png';
 

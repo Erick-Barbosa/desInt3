@@ -1,5 +1,5 @@
-import './Main.css';
 import React from 'react';
+import './Main.css';
 import Header from './Header';
 
 export default function Main(props) {
