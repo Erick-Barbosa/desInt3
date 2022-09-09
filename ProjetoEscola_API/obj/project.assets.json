@@ -1967,19 +1967,19 @@
     ]
   },
   "packageFolders": {
-    "/home/erickcb/.nuget/packages/": {}
+    "/Users/u20342/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/erickcb/Cotuca/desInt3/ProjetoEscola_API/ProjetoEscola_API.csproj",
+      "projectUniqueName": "/Users/u20342/Documents/desInt3/ProjetoEscola_API/ProjetoEscola_API.csproj",
       "projectName": "ProjetoEscola_API",
-      "projectPath": "/home/erickcb/Cotuca/desInt3/ProjetoEscola_API/ProjetoEscola_API.csproj",
-      "packagesPath": "/home/erickcb/.nuget/packages/",
-      "outputPath": "/home/erickcb/Cotuca/desInt3/ProjetoEscola_API/obj/",
+      "projectPath": "/Users/u20342/Documents/desInt3/ProjetoEscola_API/ProjetoEscola_API.csproj",
+      "packagesPath": "/Users/u20342/.nuget/packages/",
+      "outputPath": "/Users/u20342/Documents/desInt3/ProjetoEscola_API/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/erickcb/.nuget/NuGet/NuGet.Config"
+        "/Users/u20342/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
@@ -2030,7 +2030,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/dotnet6-6.0.108/sdk/6.0.108/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.302/RuntimeIdentifierGraph.json"
       }
     }
   }
