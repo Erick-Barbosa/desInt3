@@ -7,18 +7,23 @@ const title = "Cadastro de Alunos";
 
 const urlApi = "http://localhost:5041/api/aluno";
 const initialState = {
-    aluno: {id: 0, ra: '', nome: '', codCurso: ''},
-    lista: []
+    aluno: {id: 0, ra: '', nome: '', codCurso: '', 
+        toString() {
+            return this.ra + " / " + this.nome
+    }},
+    lista: [],
+    
 }
 
 export default class CrudAluno extends Component {
 
-    state = {...initialState}
+    state = { ...initialState }
 
     componentDidMount() {
         axios(urlApi).then(resp => {
             this.setState({ lista: resp.data })
         })
+        
     }
 
     limpar() {
@@ -30,9 +35,11 @@ export default class CrudAluno extends Component {
         aluno.codCurso = Number(aluno.codCurso);
         const metodo = aluno.id ? 'put' : 'post';
         const url = aluno.id ? `${urlApi}/${aluno.id}` : urlApi;
-
+        console.log("aluno: "+ aluno)
+        console.log("url: " + url)
         axios[metodo](url, aluno)
             .then(resp => {
+                console.log("data:" + resp.data.toString())
                 const lista = this.getListaAtualizada(resp.data)
                 this.setState({ aluno: initialState.aluno, lista})
             })
@@ -59,11 +66,12 @@ export default class CrudAluno extends Component {
 
     remover(aluno) {
         const url = urlApi + "/" + aluno.id
-        if (window.confirm("Confirma remoção do aluno: " + aluno.ra)) {
-            console.log("entrou no confirm");
+        if (window.confirm(`Confirma remoção do aluno ${aluno.ra} ? `)) {
+            console.log("entrou no confirm " + url);
 
             axios['delete'](url, aluno)
                 .then(resp => {
+                    console.log(resp.data)
                     const lista = this.getListaAtualizada(aluno, false);
                     this.setState({ aluno: initialState.aluno, lista})
                 })
