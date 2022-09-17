@@ -22,16 +22,17 @@ namespace ProjetoEscola_API.Controllers
             else return null;
         }
 
-        [HttpGet("{AlunoId}")]
-        public ActionResult<List<Aluno>> Get(int AlunoId) {
+        [HttpGet("{AlunoRa}")]
+        public ActionResult<List<Aluno>> Get(string AlunoRa) {
             try {
-                var result = _context?.Aluno?.Find(AlunoId);
+                var result = _context?.Aluno?.Find(AlunoRa);
                 if (result == null)
                 {
                     return NotFound();
                 }
                 return Ok(result);
             } catch {
+                Console.WriteLine();
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha no acesso ao banco de dados");
             }
         }
@@ -39,8 +40,10 @@ namespace ProjetoEscola_API.Controllers
         [HttpPost]
         public async Task<ActionResult> post(Aluno model) {
             try {
-                if (await _context.SaveChangesAsync() == 1)
-                    return Created("$/api/aluno/{model.RA}", model);
+                Console.WriteLine("RA: "+model.ra);
+                Console.WriteLine("ID: "+ model.id);
+                if (await _context!.SaveChangesAsync() == 1)
+                    return Created($"/api/aluno/{model.ra}", model);
             } catch {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha no acesso ao banco de dados");
             }
@@ -50,15 +53,15 @@ namespace ProjetoEscola_API.Controllers
         [HttpPut("{AlunoId}")]
         public async Task<ActionResult> put(int AlunoId, Aluno dadosAlunoAlt) {
             try {
-                var result = await _context.Aluno.FindAsync(AlunoId);
-                if (AlunoId != result.id) {
+                var result = await _context!.Aluno!.FindAsync(AlunoId);
+                if (AlunoId != result!.id) {
                     return BadRequest();
                 }
                 result.ra = dadosAlunoAlt.ra;
                 result.nome = dadosAlunoAlt.nome;
                 result.codCurso = dadosAlunoAlt.codCurso;
                 await _context.SaveChangesAsync();
-                return Created($"/api/aluno/{dadosAlunoAlt}", dadosAlunoAlt);
+                return Created($"/api/aluno/{dadosAlunoAlt.id}", dadosAlunoAlt);
             } catch {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha no acesso ao banco de dados");
             }
