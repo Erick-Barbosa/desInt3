@@ -1,5 +1,3 @@
-using ProjetoEscola_API.Models;
-
 namespace ProjetoEscola_API.Models
 {
     public class Aluno
