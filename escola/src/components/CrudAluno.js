@@ -15,6 +15,26 @@ const initialState = {
     
 }
 
+// let cursos = [];
+// let dropdown = document.getElementById("listaCursos");
+// dropdown.addEventListener("click", initializeList);
+
+// function initializeList() {
+//     if (cursos.length !== 0) { 
+//         return;
+//     }
+    
+//     //initializing with an example
+//     cursos.push("Selecione um curso 1");
+//     cursos.push("Selecione um curso 2");
+
+//     cursos.forEach(item => {
+//         let option = document.createElement("option");
+//         option.text = item;
+//         dropdown.appendChild(option)
+//     });
+// }
+
 export default class CrudAluno extends Component {
 
     state = { ...initialState }
@@ -23,7 +43,6 @@ export default class CrudAluno extends Component {
         axios(urlApi).then(resp => {
             this.setState({ lista: resp.data })
         })
-        
     }
 
     limpar() {
@@ -103,17 +122,10 @@ export default class CrudAluno extends Component {
                     
                     onChange={ e => this.atualizaCampo(e)}
                 />
-                <label> Código do Curso: </label>
-                <input
-                    type="number"
-                    id="codCurso"
-                    placeholder="0"
-                    className="form-input"
-                    name="codCurso"
-                    
-                    value={this.state.aluno.codCurso}
-                    onChange={ e => this.atualizaCampo(e)}
-                />
+                <label for="listaCursos"> Código do Curso: </label>
+                <select class='cursos' id="listaCursos">
+                    <option>Teste</option>
+                </select>
                 <button className="btnSalvar"
                     onClick={e => this.salvar(e)} >
                         Salvar
