@@ -5,44 +5,35 @@ import axios from 'axios'
 
 const title = "Cadastro de Alunos";
 
-const urlApi = "http://localhost:5041/api/aluno";
+const urlApiAluno = "http://localhost:5041/api/Aluno";
+const urlApiCurso = "http://localhost:5041/api/Curso";
 const initialState = {
     aluno: {id: 0, ra: '', nome: '', codCurso: '', 
         toString() {
             return this.ra + " / " + this.nome
     }},
     lista: [],
-    
+    cursoAtual: {id: 0, codCurso: '', nomeCurso: '', periodo: ''},
+    cursos:[]
 }
-
-// let cursos = [];
-// let dropdown = document.getElementById("listaCursos");
-// dropdown.addEventListener("click", initializeList);
-
-// function initializeList() {
-//     if (cursos.length !== 0) { 
-//         return;
-//     }
-    
-//     //initializing with an example
-//     cursos.push("Selecione um curso 1");
-//     cursos.push("Selecione um curso 2");
-
-//     cursos.forEach(item => {
-//         let option = document.createElement("option");
-//         option.text = item;
-//         dropdown.appendChild(option)
-//     });
-// }
 
 export default class CrudAluno extends Component {
 
     state = { ...initialState }
 
     componentDidMount() {
-        axios(urlApi).then(resp => {
+        axios(urlApiAluno).then(resp => {
             this.setState({ lista: resp.data })
         })
+        axios(urlApiCurso+"/CursoTodos").then(resp => {
+            this.setState({ cursos: resp.data })
+        })
+        if(this.state.aluno == null) {
+            axios(urlApiCurso+"/"+this.state.aluno.codCurso).then(resp => {
+                console.log("resp: "+resp.data)
+                this.setState({ cursos: resp.data })
+            })
+        }
     }
 
     limpar() {
@@ -53,7 +44,7 @@ export default class CrudAluno extends Component {
         const aluno = this.state.aluno;
         aluno.codCurso = Number(aluno.codCurso);
         const metodo = aluno.id ? 'put' : 'post';
-        const url = aluno.id ? `${urlApi}/${aluno.id}` : urlApi;
+        const url = aluno.id ? `${urlApiAluno}/${aluno.id}` : urlApiAluno;
         
         axios[metodo](url, aluno)
             .then(resp => {
@@ -82,13 +73,11 @@ export default class CrudAluno extends Component {
     }
 
     remover(aluno) {
-        const url = urlApi + "/" + aluno.id
+        const url = urlApiAluno + "/" + aluno.id
         if (window.confirm(`Confirma remoção do aluno ${aluno.ra} `)) {
-            console.log("entrou no confirm " + url);
 
             axios['delete'](url, aluno)
                 .then(resp => {
-                    console.log(resp.data)
                     const lista = this.getListaAtualizada(aluno, false);
                     this.setState({ aluno: initialState.aluno, lista})
                 })
@@ -122,9 +111,12 @@ export default class CrudAluno extends Component {
                     
                     onChange={ e => this.atualizaCampo(e)}
                 />
-                <label for="listaCursos"> Código do Curso: </label>
-                <select class='cursos' id="listaCursos">
-                    <option>Teste</option>
+                <label for="listaCursos"> Curso: </label>
+                <select className='dropdown'id='curso'>
+                    {<option defaultValue={"Selecione um curso"} className='optionValue'>Selecione um curso</option>} +
+                    {this.state.cursos.map( (curso) => 
+                        <option key={curso.id} value={curso.nomeCurso} className='optionValue'>{curso.nomeCurso + " - " + curso.periodo}</option>
+                    )}
                 </select>
                 <button className="btnSalvar"
                     onClick={e => this.salvar(e)} >

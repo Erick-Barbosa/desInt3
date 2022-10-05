@@ -5,7 +5,7 @@ using ProjetoEscola_API.Models;
 namespace ProjetoEscola_API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class CursoController : ControllerBase
     {
         private readonly EscolaContext? _context;
@@ -14,6 +14,8 @@ namespace ProjetoEscola_API.Controllers
         {
             _context = context;
         }
+
+        [ActionName("CursoTodos")]
         [HttpGet]
         public ActionResult<List<Curso>>? GetAll() {
             if (_context?.Curso != null)
@@ -22,6 +24,40 @@ namespace ProjetoEscola_API.Controllers
             else return null;
         }
 
+        [ActionName("CursoById")]
+        [HttpGet()]
+        public ActionResult<List<Aluno>> getById(int CursoId) {
+            try {
+                var result = _context.Curso.Where(c => c.id == CursoId);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
+            } catch (Exception e) {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha no acesso ao banco de dados");
+            }
+        }
+
+        [ActionName("CursoNomes")]
+        [HttpGet()]
+        public ActionResult<List<Aluno>> getNomes() {
+            try {
+                var result = _context.Curso.GroupBy(c => c.nomeCurso)
+                                            .Select(c => c.First())
+                                            .ToList();
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
+            } catch (Exception e) {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha no acesso ao banco de dados");
+            }
+        }
+
+        [ActionName("CursoId")]
         [HttpGet("{CursoId}")]
         public ActionResult<List<Aluno>> get(int CursoId) {
             try {

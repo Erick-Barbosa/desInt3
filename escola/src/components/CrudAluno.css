@@ -17,6 +17,22 @@
     text-align: left;
 }
 
+.dropdown {
+	height: 45px;
+	max-width: 300px;
+	
+	font-family: sans-serif;
+	
+	overflow: hidden;
+	transition: all 0.2s ease-out;
+	cursor: pointer;
+}
+
+.optionValue {
+    height: 45px;
+    padding: 40px;
+}
+
 th, td {
     padding: 10px;
 }
