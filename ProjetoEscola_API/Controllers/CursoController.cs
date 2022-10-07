@@ -24,11 +24,16 @@ namespace ProjetoEscola_API.Controllers
             else return null;
         }
 
-        [ActionName("CursoById")]
-        [HttpGet()]
-        public ActionResult<List<Aluno>> getById(int CursoId) {
+        [ActionName("CursoByNomeAndPeriodo")]
+        [HttpGet("{curso}/{periodo}")]
+        public ActionResult<List<Aluno>> getByNomeAndPeriodo(string curso, string periodo) {
             try {
-                var result = _context.Curso.Where(c => c.id == CursoId);
+                var result = 
+                    _context.Curso.Where(
+                                        c => c.nomeCurso == curso
+                                    ).Where(
+                                        c => c.periodo == periodo
+                                    );
 
                 if (result == null)
                 {
@@ -44,9 +49,8 @@ namespace ProjetoEscola_API.Controllers
         [HttpGet()]
         public ActionResult<List<Aluno>> getNomes() {
             try {
-                var result = _context.Curso.GroupBy(c => c.nomeCurso)
-                                            .Select(c => c.First())
-                                            .ToList();
+                var result = _context.Curso.DistinctBy(c => c.nomeCurso);
+
                 if (result == null)
                 {
                     return NotFound();
@@ -59,9 +63,9 @@ namespace ProjetoEscola_API.Controllers
 
         [ActionName("CursoId")]
         [HttpGet("{CursoId}")]
-        public ActionResult<List<Aluno>> get(int CursoId) {
+        public ActionResult<List<Aluno>> get(int cursoId) {
             try {
-                var result = _context.Curso.Find(CursoId);
+                var result = _context.Curso.Find(cursoId);
                 if (result == null)
                 {
                     return NotFound();
@@ -85,10 +89,10 @@ namespace ProjetoEscola_API.Controllers
         }
 
         [HttpPut("{CursoId}")]
-        public async Task<ActionResult> put(int CursoId, Curso dadosCursoAlt) {
+        public async Task<ActionResult> put(int cursoId, Curso dadosCursoAlt) {
             try {
-                var result = await _context.Curso.FindAsync(CursoId);
-                if (CursoId != result.id) {
+                var result = await _context.Curso.FindAsync(cursoId);
+                if (cursoId != result.id) {
                     return BadRequest();
                 }
                 
@@ -105,9 +109,9 @@ namespace ProjetoEscola_API.Controllers
         }
 
         [HttpDelete("{CursoId}")]
-        public async Task<ActionResult> delete(int CursoId) {
+        public async Task<ActionResult> delete(int cursoId) {
             try {
-                var curso = await _context.Curso.FindAsync(CursoId);
+                var curso = await _context.Curso.FindAsync(cursoId);
                 if (curso == null) {
                     return NotFound();
                 }

@@ -13,7 +13,12 @@ const initialState = {
             return this.ra + " / " + this.nome
     }},
     lista: [],
-    cursoAtual: {id: 0, codCurso: '', nomeCurso: '', periodo: ''},
+    cursoAtual: '',
+    periodoAtual: '',
+    cursoSalvo: {id: 0, codCurso: '', nomecurso: '', periodo: '',
+        toString() {
+            return this.codCurso + " - " + this.nomecurso + " / " + this.periodo
+    }},
     cursos:[]
 }
 
@@ -28,29 +33,79 @@ export default class CrudAluno extends Component {
         axios(urlApiCurso+"/CursoTodos").then(resp => {
             this.setState({ cursos: resp.data })
         })
-        if(this.state.aluno == null) {
-            axios(urlApiCurso+"/"+this.state.aluno.codCurso).then(resp => {
-                console.log("resp: "+resp.data)
-                this.setState({ cursos: resp.data })
-            })
-        }
+    }
+
+    setCursoAtual() {
+        var opcaoCurso = document.getElementById('curso');
+	    var cursoSelecionado = opcaoCurso.options[opcaoCurso.selectedIndex].text;
+        this.setState({ cursoAtual: cursoSelecionado})
+    }
+
+    setPeriodoAtual() {
+        var opcaoPeriodo = document.getElementById('periodo');
+        var periodoSelecionado = opcaoPeriodo.options[opcaoPeriodo.selectedIndex].text;
+        this.setState({ periodoAtual: periodoSelecionado })
     }
 
     limpar() {
         this.setState({ aluno: initialState.aluno });
+        var opcaoPeriodo = document.getElementById('periodo');
+        opcaoPeriodo.selectedIndex = 0;
+
+        var opcaoCurso = document.getElementById('curso');
+        opcaoCurso.selectedIndex = 0
     }
 
-    salvar() {
+    async salvar() {
         const aluno = this.state.aluno;
-        aluno.codCurso = Number(aluno.codCurso);
         const metodo = aluno.id ? 'put' : 'post';
         const url = aluno.id ? `${urlApiAluno}/${aluno.id}` : urlApiAluno;
-        
-        axios[metodo](url, aluno)
+
+        if(!this.alunoIsValid(aluno))
+            return;
+
+        try{
+            if(this.state.cursoAtual === ''){
+                window.confirm(`Selecione um curso !`)
+                return;
+            }
+            if(this.state.periodoAtual === ''){
+                window.confirm(`Selecione um Período !`)
+                return;
+            }
+            await axios(
+                urlApiCurso+
+                "/CursoByNomeAndPeriodo/"
+                +this.state.cursoAtual+"/"
+                +this.state.periodoAtual
+                ).then(resp => {
+                    aluno.codCurso = resp.data[0].codCurso
+            })
+
+            await axios[metodo](url, aluno)
             .then(resp => {
                 const lista = this.getListaAtualizada(resp.data)
                 this.setState({ aluno: initialState.aluno, lista})
             })
+        } catch {
+            window.confirm(`Curso inválido ! Verifique se esse curso existe nesse período`)
+        }
+    }
+
+    alunoIsValid(aluno) {
+        if(aluno.nome === ''){
+            window.confirm(`O nome do aluno deve ser preenchido !`)
+            return false;
+        }
+        if(aluno.ra === ''){
+            window.confirm(`O RA do aluno deve ser preenchido !`)
+            return false;
+        }
+        if(aluno.ra.length !== 5){
+            window.confirm(`Insira um RA válido !`)
+            return false;
+        }
+        return true
     }
 
     getListaAtualizada(aluno, add = true) {
@@ -87,6 +142,7 @@ export default class CrudAluno extends Component {
     renderForm() {
         return (
             <div className="inclui-container">
+
                 <label> RA: </label>
                 <input
                     type="text"
@@ -99,6 +155,7 @@ export default class CrudAluno extends Component {
                     
                     onChange={ e => this.atualizaCampo(e)}
                 />
+
                 <label> Nome: </label>
                 <input
                     type="text"
@@ -106,18 +163,40 @@ export default class CrudAluno extends Component {
                     placeholder="Nome do aluno"
                     className="form-input"
                     name="nome"
+                    minLength={5}
+                    maxLength={5}
                     
                     value={this.state.aluno.nome}
                     
                     onChange={ e => this.atualizaCampo(e)}
                 />
+
                 <label for="listaCursos"> Curso: </label>
-                <select className='dropdown'id='curso'>
-                    {<option defaultValue={"Selecione um curso"} className='optionValue'>Selecione um curso</option>} +
+                <select className='dropdown'id='curso' onChange={teste => this.setCursoAtual(teste)}>
+                    {<option 
+                        defaultValue={"Selecione um Curso"} 
+                        className='optionValue'
+                        hidden>
+                        Selecione um Curso
+                    </option>} +    
                     {this.state.cursos.map( (curso) => 
-                        <option key={curso.id} value={curso.nomeCurso} className='optionValue'>{curso.nomeCurso + " - " + curso.periodo}</option>
+                        <option key={curso.id} value={curso.nomeCurso} className='optionValue'>{curso.nomeCurso}</option>
                     )}
                 </select>
+
+                <label for="listaCursos"> Periodo: </label>
+                <select className='dropdown'id='periodo' onChange={teste => this.setPeriodoAtual(teste)}>
+                    {<option 
+                        defaultValue={"Selecione um Periodo"} 
+                        className='optionValue'
+                        hidden>
+                        Selecione um Periodo
+                    </option>} +
+                    {this.state.cursos.map( (curso) => 
+                        <option key={curso.id} value={curso.periodo} className='optionValue'>{curso.periodo}</option>
+                    )}
+                </select>
+
                 <button className="btnSalvar"
                     onClick={e => this.salvar(e)} >
                         Salvar
