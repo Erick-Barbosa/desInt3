@@ -26,7 +26,7 @@ namespace ProjetoEscola_API.Controllers
 
         [ActionName("CursoByNomeAndPeriodo")]
         [HttpGet("{curso}/{periodo}")]
-        public ActionResult<List<Aluno>> getByNomeAndPeriodo(string curso, string periodo) {
+        public ActionResult<List<Curso>> getByNomeAndPeriodo(string curso, string periodo) {
             try {
                 var result = 
                     _context.Curso.Where(
@@ -34,22 +34,6 @@ namespace ProjetoEscola_API.Controllers
                                     ).Where(
                                         c => c.periodo == periodo
                                     );
-
-                if (result == null)
-                {
-                    return NotFound();
-                }
-                return Ok(result);
-            } catch (Exception e) {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha no acesso ao banco de dados");
-            }
-        }
-
-        [ActionName("CursoNomes")]
-        [HttpGet()]
-        public ActionResult<List<Aluno>> getNomes() {
-            try {
-                var result = _context.Curso.DistinctBy(c => c.nomeCurso);
 
                 if (result == null)
                 {

@@ -150,6 +150,8 @@ export default class CrudAluno extends Component {
                     placeholder="RA do aluno"
                     className="form-input"
                     name="ra"
+                    minLength={5}
+                    maxLength={5}
                     
                     value={this.state.aluno.ra}
                     
@@ -163,8 +165,6 @@ export default class CrudAluno extends Component {
                     placeholder="Nome do aluno"
                     className="form-input"
                     name="nome"
-                    minLength={5}
-                    maxLength={5}
                     
                     value={this.state.aluno.nome}
                     
@@ -186,15 +186,15 @@ export default class CrudAluno extends Component {
 
                 <label for="listaCursos"> Periodo: </label>
                 <select className='dropdown'id='periodo' onChange={teste => this.setPeriodoAtual(teste)}>
-                    {<option 
+                    <option 
                         defaultValue={"Selecione um Periodo"} 
                         className='optionValue'
                         hidden>
                         Selecione um Periodo
-                    </option>} +
-                    {this.state.cursos.map( (curso) => 
-                        <option key={curso.id} value={curso.periodo} className='optionValue'>{curso.periodo}</option>
-                    )}
+                    </option>
+                    <option key={1} value='M' className='optionValue'>M</option>
+                    <option key={2} value='V' className='optionValue'>V</option>
+                    <option key={3} value='N' className='optionValue'>N</option>
                 </select>
 
                 <button className="btnSalvar"
