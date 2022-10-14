@@ -124,6 +124,19 @@ export default class CrudAluno extends Component {
     }
 
     carregar(aluno) {
+        axios(urlApiCurso+"/CursoByCod/"+aluno.codCurso).then(resp => {
+            this.setState({ 
+                cursoAtual: resp.data[0].nomeCurso,
+                periodoAtual: resp.data[0].periodo
+            })
+        
+            var opcaoPeriodo = document.getElementById('periodo');
+            opcaoPeriodo.value = resp.data[0].periodo;
+
+            var opcaoCurso = document.getElementById('curso');
+            opcaoCurso.value = resp.data[0].nomeCurso
+        })
+        
         this.setState({ aluno })
     }
 

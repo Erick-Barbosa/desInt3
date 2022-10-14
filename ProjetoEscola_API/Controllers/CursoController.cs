@@ -45,11 +45,11 @@ namespace ProjetoEscola_API.Controllers
             }
         }
 
-        [ActionName("CursoId")]
-        [HttpGet("{CursoId}")]
-        public ActionResult<List<Aluno>> get(int cursoId) {
+        [ActionName("CursoByCod")]
+        [HttpGet("{cursoCod}")]
+        public ActionResult<List<Aluno>> get(int cursoCod) {
             try {
-                var result = _context.Curso.Find(cursoId);
+                var result = _context.Curso.Where(c => c.codCurso == cursoCod);
                 if (result == null)
                 {
                     return NotFound();
