@@ -47,7 +47,7 @@ namespace ProjetoEscola_API.Controllers
 
         [ActionName("CursoByCod")]
         [HttpGet("{cursoCod}")]
-        public ActionResult<List<Aluno>> get(int cursoCod) {
+        public ActionResult<List<Curso>> get(int cursoCod) {
             try {
                 var result = _context.Curso.Where(c => c.codCurso == cursoCod);
                 if (result == null)
@@ -60,6 +60,22 @@ namespace ProjetoEscola_API.Controllers
             }
         }
 
+        [ActionName("CursoByNome")]
+        [HttpGet("{cursoNome}")]
+        public ActionResult<List<Curso>> getByNome(string nomeCurso) {
+            try {
+                var result = _context.Curso.Where(c => c.nomeCurso == nomeCurso);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
+            } catch (Exception e) {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha no acesso ao banco de dados");
+            }
+        }
+
+        [ActionName("Post")]
         [HttpPost]
         public async Task<ActionResult> post(Curso model) {
             try {
@@ -72,6 +88,7 @@ namespace ProjetoEscola_API.Controllers
             return BadRequest();
         }
 
+        [ActionName("Put")]
         [HttpPut("{CursoId}")]
         public async Task<ActionResult> put(int cursoId, Curso dadosCursoAlt) {
             try {
@@ -86,12 +103,13 @@ namespace ProjetoEscola_API.Controllers
                 
                 await _context.SaveChangesAsync();
                 
-                return Created($"/api/aluno/{dadosCursoAlt.codCurso}", dadosCursoAlt);
+                return Created($"/api/curso/{dadosCursoAlt.codCurso}", dadosCursoAlt);
             } catch (Exception e){
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha no acesso ao banco de dados");
             }
         }
 
+        [ActionName("Delete")]
         [HttpDelete("{CursoId}")]
         public async Task<ActionResult> delete(int cursoId) {
             try {

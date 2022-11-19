@@ -5,7 +5,7 @@ using ProjetoEscola_API.Models;
 namespace ProjetoEscola_API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class AlunoController : ControllerBase
     {
         private readonly EscolaContext? _context;
@@ -14,14 +14,17 @@ namespace ProjetoEscola_API.Controllers
         {
             _context = context;
         }
+
+        [ActionName("GetAll")]
         [HttpGet]
-        public ActionResult<List<Aluno>>? GetAll() {
+        public ActionResult<List<Aluno>>? getAll() {
             if (_context?.Aluno != null)
                 return _context.Aluno.ToList();
 
             else return null;
         }
 
+        [ActionName("Get")]
         [HttpGet("{AlunoId}")]
         public ActionResult<List<Aluno>> get(int AlunoId) {
             try {
@@ -31,23 +34,40 @@ namespace ProjetoEscola_API.Controllers
                     return NotFound();
                 }
                 return Ok(result);
-            } catch (Exception e) {
+            } catch {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha no acesso ao banco de dados");
             }
         }
 
+        [ActionName("GetByCodCurso")]
+        [HttpGet("{CodCurso}")]
+        public ActionResult<List<Aluno>> getByCodCurso(int CodCurso) {
+            try {
+                var result = _context.Aluno.Where(aluno => aluno.codCurso == CodCurso);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
+            } catch {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha no acesso ao banco de dados");
+            }
+        }
+
+        [ActionName("Post")]
         [HttpPost]
         public async Task<ActionResult> post(Aluno model) {
             try {
                 _context.Aluno.Add(model);
                 if (await _context.SaveChangesAsync() == 1)
                     return Created($"/api/aluno/{model.ra}", model);
-            } catch (Exception e){
+            } catch {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha no acesso ao banco de dados");
             }
             return BadRequest();
         }
 
+        [ActionName("Put")]
         [HttpPut("{AlunoId}")]
         public async Task<ActionResult> put(int AlunoId, Aluno dadosAlunoAlt) {
             try {
@@ -63,11 +83,12 @@ namespace ProjetoEscola_API.Controllers
                 await _context.SaveChangesAsync();
                 
                 return Created($"/api/aluno/{dadosAlunoAlt.ra}", dadosAlunoAlt);
-            } catch (Exception e){
+            } catch {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha no acesso ao banco de dados");
             }
         }
 
+        [ActionName("Delete")]
         [HttpDelete("{AlunoId}")]
         public async Task<ActionResult> delete(int AlunoId) {
             try {
@@ -78,7 +99,7 @@ namespace ProjetoEscola_API.Controllers
                 _context.Remove(aluno);
                 await _context.SaveChangesAsync();
                 return NoContent();
-            } catch (Exception e){
+            } catch {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha no acesso ao banco de dados");
             }
         }

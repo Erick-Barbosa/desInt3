@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {
+    "net7.0": {
       "Microsoft.CSharp/4.5.0": {
         "type": "package",
         "compile": {
@@ -2117,7 +2117,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net6.0": [
+    "net7.0": [
       "Microsoft.EntityFrameworkCore.SqlServer >= 6.0.8",
       "Swashbuckle.AspNetCore >= 6.2.3"
     ]
@@ -2128,24 +2128,24 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Cotuca\\desInt3\\ProjetoEscola_API\\ProjetoEscola_API.csproj",
+      "projectUniqueName": "c:\\Cotuca\\desInt3\\ProjetoEscola_API\\ProjetoEscola_API.csproj",
       "projectName": "ProjetoEscola_API",
-      "projectPath": "C:\\Cotuca\\desInt3\\ProjetoEscola_API\\ProjetoEscola_API.csproj",
+      "projectPath": "c:\\Cotuca\\desInt3\\ProjetoEscola_API\\ProjetoEscola_API.csproj",
       "packagesPath": "C:\\Users\\T-GAMER\\.nuget\\packages\\",
-      "outputPath": "C:\\Cotuca\\desInt3\\ProjetoEscola_API\\obj\\",
+      "outputPath": "c:\\Cotuca\\desInt3\\ProjetoEscola_API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\T-GAMER\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
-        "net6.0"
+        "net7.0"
       ],
       "sources": {
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net7.0": {
+          "targetAlias": "net7.0",
           "projectReferences": {}
         }
       },
@@ -2156,8 +2156,8 @@
       }
     },
     "frameworks": {
-      "net6.0": {
-        "targetAlias": "net6.0",
+      "net7.0": {
+        "targetAlias": "net7.0",
         "dependencies": {
           "Microsoft.EntityFrameworkCore.SqlServer": {
             "target": "Package",
@@ -2187,7 +2187,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }

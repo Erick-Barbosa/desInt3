@@ -11,8 +11,7 @@ const initialState = {
         toString() {
             return this.codCurso + " / " + this.nomeCurso
     }},
-    lista: [],
-    
+    lista: []
 }
 
 export default class CrudAluno extends Component {
@@ -20,27 +19,39 @@ export default class CrudAluno extends Component {
     state = { ...initialState }
 
     componentDidMount() {
-        axios(urlApi).then(resp => {
+        axios(urlApi+"/CursoTodos").then(resp => {
             this.setState({ lista: resp.data })
         })
-        
     }
 
     limpar() {
         this.setState({ curso: initialState.curso });
     }
 
-    salvar() {
+    async salvar() {
         const curso = this.state.curso;
         curso.codCurso = Number(curso.codCurso);
         const metodo = curso.id ? 'put' : 'post';
-        const url = curso.id ? `${urlApi}/${curso.id}` : urlApi;
+        const url = curso.id ? `${urlApi}/Put/${curso.id}` : `${urlApi}/Post/`; 
+        
+        try{
+            if(this.state.cursoAtual === ''){
+                window.confirm(`Selecione um curso !`)
+                return;
+            }
+            if(this.state.periodoAtual === ''){
+                window.confirm(`Selecione um Período !`)
+                return;
+            }
 
-        axios[metodo](url, curso)
+            await axios[metodo](url, curso)
             .then(resp => {
                 const lista = this.getListaAtualizada(resp.data)
                 this.setState({ curso: initialState.curso, lista})
             })
+        } catch {
+            window.confirm(`Curso inválido ! Verifique se esse curso existe nesse período`)
+        }
     }
 
     getListaAtualizada(curso, add = true) {
@@ -63,15 +74,15 @@ export default class CrudAluno extends Component {
     }
 
     remover(curso) {
-        const url = urlApi + "/" + curso.id
-        if (window.confirm(`Confirma remoção do aluno ${curso.ra} `)) {
+        const url = urlApi + "/Delete/" + curso.id
+        if (window.confirm(`Confirma remoção do Curso: ${curso.nomeCurso} - ${curso.id} `)) {
             console.log("entrou no confirm " + url);
 
             axios['delete'](url, curso)
                 .then(resp => {
                     const lista = this.getListaAtualizada(curso, false);
                     this.setState({ curso: initialState.curso, lista})
-                })
+            })
         }
     }
 

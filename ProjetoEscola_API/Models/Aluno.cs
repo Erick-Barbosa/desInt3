@@ -6,5 +6,6 @@ namespace ProjetoEscola_API.Models
         public string? nome { get; set; }
         public string? ra { get; set; }
         public int codCurso { get; set; }
+        public string? avatar { get; set; }
     }
 }

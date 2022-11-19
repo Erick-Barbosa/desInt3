@@ -8,7 +8,7 @@ const title = "Cadastro de Alunos";
 const urlApiAluno = "http://localhost:5041/api/Aluno";
 const urlApiCurso = "http://localhost:5041/api/Curso";
 const initialState = {
-    aluno: {id: 0, ra: '', nome: '', codCurso: '', 
+    aluno: {id: 0, ra: '', nome: '', codCurso: '', avatar: '',
         toString() {
             return this.ra + " / " + this.nome
     }},
@@ -27,7 +27,7 @@ export default class CrudAluno extends Component {
     state = { ...initialState }
 
     componentDidMount() {
-        axios(urlApiAluno).then(resp => {
+        axios(urlApiAluno+"/GetAll").then(resp => {
             this.setState({ lista: resp.data })
         })
         axios(urlApiCurso+"/CursoTodos").then(resp => {
@@ -59,7 +59,7 @@ export default class CrudAluno extends Component {
     async salvar() {
         const aluno = this.state.aluno;
         const metodo = aluno.id ? 'put' : 'post';
-        const url = aluno.id ? `${urlApiAluno}/${aluno.id}` : urlApiAluno;
+        const url = aluno.id ? `${urlApiAluno}/Put/${aluno.id}` : urlApiAluno+"/Post/";
 
         if(!this.alunoIsValid(aluno))
             return;
@@ -141,7 +141,7 @@ export default class CrudAluno extends Component {
     }
 
     remover(aluno) {
-        const url = urlApiAluno + "/" + aluno.id
+        const url = urlApiAluno + "/Delete/" + aluno.id
         if (window.confirm(`Confirma remoção do aluno ${aluno.ra} `)) {
 
             axios['delete'](url, aluno)
@@ -155,7 +155,6 @@ export default class CrudAluno extends Component {
     renderForm() {
         return (
             <div className="inclui-container">
-
                 <label> RA: </label>
                 <input
                     type="text"
@@ -185,7 +184,7 @@ export default class CrudAluno extends Component {
                 />
 
                 <label for="listaCursos"> Curso: </label>
-                <select className='dropdown'id='curso' onChange={teste => this.setCursoAtual(teste)}>
+                <select className='dropdown' id='curso' onChange={teste => this.setCursoAtual(teste)}>
                     {<option 
                         defaultValue={"Selecione um Curso"} 
                         className='optionValue'
@@ -209,15 +208,14 @@ export default class CrudAluno extends Component {
                     <option key={2} value='V' className='optionValue'>V</option>
                     <option key={3} value='N' className='optionValue'>N</option>
                 </select>
-
-                <button className="btnSalvar"
-                    onClick={e => this.salvar(e)} >
-                        Salvar
-                </button>
-                <button className="btnCancelar"
-                    onClick={e => this.limpar(e)} >
-                        Cancelar
-                </button>
+                    <button className="btnSalvar"
+                        onClick={e => this.salvar(e)} >
+                            Salvar
+                    </button>
+                    <button className="btnCancelar"
+                        onClick={e => this.limpar(e)} >
+                            Cancelar
+                    </button>
             </div>
         )
     }
